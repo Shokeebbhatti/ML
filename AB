@@ -280,3 +280,57 @@ int main() {
     }
 }
 
+UPDATED 3:
+
+#include <stdio.h>
+#define MAX 10
+#define INF 999
+int cost[MAX][MAX], dist[MAX][MAX], via[MAX][MAX];
+int n;
+void initialize() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            dist[i][j] = cost[i][j];
+            if (cost[i][j] != INF && i != j)
+                via[i][j] = j;
+            else
+                via[i][j] = -1;
+        }
+    }
+}
+void update_tables() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            for (int k = 0; k < n; k++) {
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    via[i][j] = k;
+                }
+            }
+        }
+    }
+}
+void print_tables() {
+    for (int i = 0; i < n; i++) {
+        printf("\nRouting table for router %d:\n", i);
+        printf("Destination\tNext Hop\tCost\n");
+        for (int j = 0; j < n; j++) {
+            if (i == j) continue;
+            printf("%d\t\t%d\t\t%d\n", j, via[i][j], dist[i][j]);
+        }
+    }
+}
+int main() {
+    printf("Enter number of routers: ");
+    scanf("%d", &n);
+    printf("Enter cost matrix (use 999 for no direct link):\n");
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &cost[i][j]);
+    initialize();
+    update_tables();
+    print_tables();
+    return 0;
+}
+
+
