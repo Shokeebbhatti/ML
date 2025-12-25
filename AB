@@ -1,167 +1,274 @@
-7.
-import numpy as np  
-import matplotlib.pyplot as plt  
-import pandas as pd  
+1.
+#include<stdio.h>
+#include<string.h>
+#define N strlen(gen_poly)
+char data[28];
+char check_value[28];
+char gen_poly[10];
+int data_length,i,j;
+void crc();
+void XOR(){
+    for(j = 1;j < N; j++)
+        check_value[j] = (( check_value[j] == gen_poly[j])?'0':'1');
+}
+void receiver(){
+    printf("Enter the received data: ");
+    scanf("%s", data);
+    printf("\n-----------------------------\n");
+    printf("Data received: %s", data);
+    crc();
+    for(i=0;(i<N-1) && (check_value[i]!='1');i++);
+    if(i<N-1)
+        printf("\nError detected\n\n");
+    else
+        printf("\nNo error detected\n\n");
+}
+void crc(){
+    for(i=0;i<N;i++)
+        check_value[i]=data[i];
+    do{
+        if(check_value[0]=='1')
+            XOR();
+        for(j=0;j<N-1;j++)
+            check_value[j]=check_value[j+1];
+        check_value[j]=data[i++];
+    }while(i<=data_length+N-1);
+}
+int main(){
+    printf("\nEnter data to be transmitted: ");
+    scanf("%s",data);
+    printf("\n Enter the Generating polynomial: ");
+    scanf("%s",gen_poly);
+    data_length=strlen(data);
+    for(i=data_length;i<data_length+N-1;i++)
+        data[i]='0';
+    printf("\n----------------------------------------");
+    printf("\n Data padded with n-1 zeros : %s",data);
+    printf("\n----------------------------------------");
+    crc();
+    printf("\nCRC or Check value is : %s",check_value);
+    for(i=data_length;i<data_length+N-1;i++)
+        data[i]=check_value[i-data_length];
+    printf("\n----------------------------------------");
+    printf("\n Final data to be sent : %s",data);
+    printf("\n----------------------------------------\n");
+    receiver();
+    return 0;
+}
 
-dataset = pd.read_csv('Social_Network_Ads.csv')  
+2.
+#include <stdio.h>
+#include <math.h>
+int input[32];
+int code[32];
+int ham_calc(int,int);
+void main() {
+    int n,i,p_n = 0,c_l,j,k;
+    printf("Please enter the length of the Data Word: ");
+    scanf("%d",&n);
+    printf("Please enter the Data Word:\n");
+    for(i=0;i<n;i++) {
+        scanf("%d",&input[i]);
+    }
+    i=0;
+    while(n>(int)pow(2,i)-(i+1)) {
+        p_n++;
+        i++;
+    }
+    c_l = p_n + n;
+    j=k=0;
+    for(i=0;i<c_l;i++) {
+        if(i==((int)pow(2,k)-1)) {
+            code[i]=0;
+            k++;
+        }
+        else {
+            code[i]=input[j];
+            j++;
+        }
+    }
+    for(i=0;i<p_n;i++) {
+        int position = (int)pow(2,i);
+        int value = ham_calc(position,c_l);
+        code[position-1]=value;
+    }
+    printf("\nThe calculated Code Word is: ");
+    for(i=0;i<c_l;i++)
+        printf("%d",code[i]);
+    printf("\n");
+    printf("Please enter the received Code Word:\n");
+    for(i=0;i<c_l;i++)
+        scanf("%d",&code[i]);
+    int error_pos = 0;
+    for(i=0;i<p_n;i++) {
+        int position = (int)pow(2,i);
+        int value = ham_calc(position,c_l);
+        if(value != 0)
+            error_pos+=position;
+    }
+    if(error_pos == 0)
+        printf("The received Code Word is correct.\n");
+    else
+        printf("Error at bit position: %d\n",error_pos);
+}
+int ham_calc(int position,int c_l) {
+    int count=0,i,j;
+    i=position-1;
+    while(i<c_l) {
+        for(j=i;j<i+position;j++) {
+            if(code[j] == 1)
+                count++;
+        }
+        i=i+2*position;
+    }
+    if(count%2 == 0)
+        return 0;
+    else
+        return 1;
+}
 
-if 'Gender' in dataset.columns:  
-    from sklearn.preprocessing import LabelEncoder  
-    le = LabelEncoder()  
-    dataset['Gender'] = le.fit_transform(dataset['Gender'])  
+3.
+#include<stdio.h>
+int dist[50][50],temp[50][50],n,i,j,k,x
+void dvr();
+int main() {
+    printf("\nEnter the number of nodes : ");
+    scanf("%d",&n);
+    printf("\nEnter the distance matrix :\n");
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++) {
+            scanf("%d",&dist[i][j]);
+            dist[i][i]=0;
+            temp[i][j]=j;
+        }
+        printf("\n");
+    }
+    dvr();
+    printf("enter value of i &j:");
+    scanf("%d",&i);
+    scanf("%d",&j);
+    printf("enter the new cost");
+    scanf("%d",&x);
+    dist[i][j]=x;
+    printf("After update\n\n");
+    dvr();
+    return 0;
+}
+void dvr() {
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            for (k = 0; k < n; k++)
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    temp[i][j] = k;
+                }
+    for(i=0;i<n;i++) {
+        printf("\n\nState value for router %d is \n",i+1);
+        for(j=0;j<n;j++)
+            printf("\t\nnode %d via %d Distance%d",j+1,temp[i][j]+1,dist[i][j]);
+    }
+    printf("\n\n");
+}
 
-X = dataset.iloc[:, [1, 2, 3]].values       
-y = dataset.iloc[:, -1].values  
+4
+#include <stdio.h>
+#include <string.h>
+int main() {
+    int count,src_router,i,j,k,w,v,min;
+    int cost_matrix[100][100],dist[100],last[100];
+    int flag[100];
+    printf("\n Enter the no of routers");
+    scanf("%d",&count);
+    printf("\n Enter the cost matrix values:");
+    for(i=0;i<count;i++) {
+        for(j=0;j<count;j++) {
+            printf("\n%d->%d:",i,j);
+            scanf("%d",&cost_matrix[i][j]);
+            if(cost_matrix[i][j]<0)
+                cost_matrix[i][j]=1000;
+        }
+    }
+    printf("\n Enter the source router:");
+    scanf("%d",&src_router);
+    for(v=0;v<count;v++) {
+        flag[v]=0;
+        last[v]=src_router;
+        dist[v]=cost_matrix[src_router][v];
+    }
+    flag[src_router]=1;
+    for(i=0;i<count;i++) {
+        min=1000;
+        for(w=0;w<count;w++) {
+            if(!flag[w])
+                if(dist[w]<min) {
+                    v=w;
+                    min=dist[w];
+                }
+        }
+        flag[v]=1;
+        for(w=0;w<count;w++) {
+            if(!flag[w])
+                if(min+cost_matrix[v][w]<dist[w]) {
+                    dist[w]=min+cost_matrix[v][w];
+                    last[w]=v;
+                }
+        }
+    }
+    for(i=0;i<count;i++) {
+        printf("\n%d==>%d:Path taken:%d",src_router,i,i);
+        w=i;
+        while(w!=src_router) {
+            printf("\n<--%d",last[w]);
+            w=last[w];
+        }
+        printf("\n Shortest path cost:%d",dist[i]);
+    }
+}
 
-print("First few rows of the dataset:")  
-print(dataset.head())  
 
-from sklearn.model_selection import train_test_split  
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)  
+5
+#include <stdio.h>
+int main() {
+    int n;
+    int i,j,k;
+    int a[10][10],b[10][10];
+    printf("\n Enter the number of nodes:");
+    scanf("%d",&n);
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++) {
+            printf("\n Enter the distance between the host %d - %d:",i+1,j+1);
+            scanf("%d",&a[i][j]);
+        }
+    }
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++) {
+            printf("%d\t",a[i][j]);
+        }
+        printf("\n");
+    }
+    for(k=0;k<n;k++) {
+        for(i=0;i<n;i++) {
+            for(j=0;j<n;j++) {
+                if(a[i][j]>a[i][k]+a[k][j]) {
+                    a[i][j]=a[i][k]+a[k][j];
+                }
+            }
+        }
+    }
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++) {
+            b[i][j]=a[i][j];
+            if(i==j) {
+                b[i][j]=0;
+            }
+        }
+    }
+    printf("\n The output matrix:\n");
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++) {
+            printf("%d\t",b[i][j]);
+        }
+        printf("\n");
+    }
+}
 
-from sklearn.preprocessing import StandardScaler  
-sc = StandardScaler()  
-X_train = sc.fit_transform(X_train)  
-X_test = sc.transform(X_test)  
-
-print("\nScaled Training Features:")  
-print(X_train)  
-
-from sklearn.neighbors import KNeighborsClassifier  
-classifier = KNeighborsClassifier(n_neighbors=5, metric='minkowski', p=2)  
-classifier.fit(X_train, y_train)  
-
-custom_prediction = classifier.predict(sc.transform([[1, 46, 28000]]))  
-print(f"\nPrediction for [Gender=Male (1), Age=46, EstimatedSalary=28000]: {custom_prediction[0]}")  
-
-y_pred = classifier.predict(X_test)  
-
-results = np.concatenate((y_pred.reshape(len(y_pred), 1), y_test.reshape(len(y_test), 1)), axis=1)  
-print("\nPredicted vs Actual values:")  
-print(results)  
-
-from sklearn.metrics import confusion_matrix, accuracy_score  
-cm = confusion_matrix(y_test, y_pred)  
-accuracy = accuracy_score(y_test, y_pred)  
-
-print("\nConfusion Matrix:")  
-print(cm)  
-
-print(f"\nAccuracy Score: {accuracy:.2f}")
-
-
-8.
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-dataset=pd.read_csv('Salary_Data.csv')
-x=dataset.iloc[:,:-1].values
-y=dataset.iloc[:,-1].values
-dataset.head()
-from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=1/3,random_state=0)
-print(x_train)
-print(x_test)
-print(y_train)
-print(y_test)
-from sklearn.linear_model import LinearRegression
-regressor=LinearRegression()
-regressor.fit(x_train,y_train)
-y_pred=regressor.predict(x_test)
-print(y_test)
-print(y_pred)
-print(np.concatenate((y_test.reshape(len(y_test),1),y_pred.reshape(len(y_pred),1)),1))
-from sklearn.metrics import mean_squared_error
-mean=mean_squared_error(y_test,y_pred)
-mean
-plt.scatter(x_train,y_train,color='red')
-plt.plot(x_train,regressor.predict(x_train),color='blue')
-plt.title('salary vs Experience(Training set)')
-plt.xlabel('years of Experience')
-plt.ylabel('salary')
-plt.show()
-plt.scatter(x_test,y_test,color='red')
-plt.plot(x_train,regressor.predict(x_train),color='blue')
-plt.title('Salary vs Experience (Test set)')
-plt.xlabel('Years of Experience')
-plt.ylabel('Salary')
-plt.show()
-
-9.
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error,r2_score
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
-data=pd.read_csv('50_Startups.csv')
-df=pd.DataFrame(data)
-print("Dataset:")
-print(df.head())
-X=df.drop(columns=['Profit'])
-y=df['Profit']
-column_transformer=ColumnTransformer(transformers=[('encoder',OneHotEncoder(),['State'])],remainder='passthrough')
-X=column_transformer.fit_transform(X)
-X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
-model=LinearRegression()
-model.fit(X_train,y_train)
-y_pred=model.predict(X_test)
-mse=mean_squared_error(y_test,y_pred)
-r2=r2_score(y_test,y_pred)
-print(f"Mean Squared Error: {mse}")
-print(f"R-squared Score: {r2}")
-print("Coefficients:",model.coef_)
-print("Intercept:",model.intercept_)
-
-10.
-import numpy as nm
-import matplotlib.pyplot as mtp
-import pandas as pd
-dataset=pd.read_csv('Mall_Customers.csv')
-x=dataset.iloc[:,[3,4]].values
-dataset.head()
-import scipy.cluster.hierarchy as shc
-dendro=shc.dendrogram(shc.linkage(x,method="ward"))
-mtp.title("Dendrogrma Plot")
-mtp.ylabel("Euclidean Distances")
-mtp.xlabel("Customers")
-mtp.show()
-from sklearn.cluster import AgglomerativeClustering
-hc=AgglomerativeClustering(n_clusters=5,metric='euclidean',linkage='ward')
-y_pred=hc.fit_predict(x)
-mtp.scatter(x[y_pred==0,0],x[y_pred==0,1],s=100,c='blue',label='Cluster 1')
-mtp.scatter(x[y_pred==1,0],x[y_pred==1,1],s=100,c='green',label='Cluster 2')
-mtp.scatter(x[y_pred==2,0],x[y_pred==2,1],s=100,c='red',label='Cluster 3')
-mtp.scatter(x[y_pred==3,0],x[y_pred==3,1],s=100,c='cyan',label='Cluster 4')
-mtp.scatter(x[y_pred==4,0],x[y_pred==4,1],s=100,c='magenta',label='Cluster 5')
-mtp.title('Clusters of customers')
-mtp.xlabel('Annual Income (k$)')
-mtp.ylabel('Spending Score (1-100)')
-mtp.legend()
-mtp.show()
-
-11.
-import pandas as pd   
-import numpy as np   
-import matplotlib.pyplot as plt   
-from sklearn.cluster import DBSCAN   
-from sklearn.preprocessing import StandardScaler   
-df=pd.read_csv('Mall_Customers.csv')   
-df.head()   
-x_train=df[['Age','Annual Income (k$)','Spending Score (1-100)']]   
-x_train   
-scaler = StandardScaler()   
-X_scaled = scaler.fit_transform(X)      
-dbscan = DBSCAN(eps=0.5, min_samples=5) 
-as needed  y_dbscan = dbscan.fit_predict(X_scaled)      
-df['Cluster'] = y_dbscan      
-print(df['Cluster'].value_counts())   
-plt.figure(figsize=(8, 6))   
-plt.scatter(X['Annual Income (k$)'], X['Spending Score (1-100)'], c=y_dbscan, 
-cmap='rainbow', s=50,  alpha=0.7)   
-plt.title("DBSCAN Clustering on Mall Customers Dataset")   
-plt.xlabel("Annual Income (k$)")   
-plt.ylabel("Spending Score (1-100)")   
-plt.colorbar(label="Cluster Label")   
-plt.show() 
