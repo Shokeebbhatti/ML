@@ -1,273 +1,308 @@
 1.
 #include <stdio.h>
-#include <ctype.h>
-
-void encryptDecrypt(char text[]) {
-    for (int i = 0; text[i] != '\0'; i++) {
-        if (isalpha(text[i])) {
-            if (isupper(text[i])) {
-                text[i] = 'Z' - (text[i] - 'A');
-            } else if (islower(text[i])) {
-                text[i] = 'z' - (text[i] - 'a');
-            }
+#include <conio.h>
+int main()
+{
+    int c1, c2, c3, temp;
+    int locks, stocks, barrels, totallocks, totalstocks, totalbarrels;
+    float lockprice, stockprice, barrelprice, locksales, stocksales, barrelsales, sales, com;
+    lockprice = 45.0;
+    stockprice = 30.0;
+    barrelprice = 25.0;
+    totallocks = 0;
+    totalstocks = 0;
+    totalbarrels = 0;
+    printf("Enter the number of locks and to exit press -1\n");
+    scanf("%d", &locks);
+    while (locks != -1)
+    {
+        c1 = (locks <= 0 || locks > 70);
+        printf("\nEnter the number of stocks and barrels\n");
+        scanf("%d %d", &stocks, &barrels);
+        c2 = (stocks <= 0 || stocks > 80);
+        c3 = (barrels <= 0 || barrels > 90);
+        if (c1)
+            printf("\nValue of locks are not in the range of 1.... 70\n");
+        else
+        {
+            temp = totallocks + locks;
+            if (temp > 70)
+                printf("New totallocks = %d not in the range of 1.....70\n", temp);
+            else
+                totallocks = temp;
         }
+        printf("Total locks = %d", totallocks);
+        if (c2)
+            printf("\n Value of stocks not in the range of 1.... 80\n");
+        else
+        {
+            temp = totalstocks + stocks;
+            if (temp > 80)
+                printf("\nNew total stocks = %d not in the range of 1.... 80", temp);
+            else
+                totalstocks = temp;
+        }
+        printf("\nTotal stocks = %d", totalstocks);
+        if (c3)
+            printf("\n Value of barrels not in the range of 1.....90\n");
+        else
+        {
+            temp = totalbarrels + barrels;
+            if (temp > 90)
+                printf("\nNew total barrels = %d not in the range of 1.....90\n", temp);
+            else
+                totalbarrels = temp;
+        }
+        printf("\nTotal barrels=%d", totalbarrels);
+        printf("\nEnter the number of locks and to exit press -1\n");
+        scanf("%d", &locks);
     }
-}
-
-int main() {
-    char message[100];
-
-    printf("Enter the message: ");
-    fgets(message, sizeof(message), stdin);
-
-    encryptDecrypt(message);
-    printf("Encrypted Message: %s", message);
-
-    encryptDecrypt(message);
-    printf("Decrypted Message: %s", message);
-
+    printf("\n Total locks = %d", totallocks);
+    printf("\n Total stocks = %d", totalstocks);
+    printf("\n Total barrels = %d", totalbarrels);
+    locksales = totallocks * lockprice;
+    stocksales = totalstocks * stockprice;
+    barrelsales = totalbarrels * barrelprice;
+    sales = locksales + stocksales + barrelsales;
+    printf("\n Total sales = %f", sales);
+    if (sales > 1800)
+    {
+        com = 0.10 * 1000;
+        com = com + (0.15 * 800);
+        com = com + 0.20 * (sales - 1800);
+    }
+    else if (sales > 1000)
+    {
+        com = 0.10 * 1000;
+        com = com + 0.15 * (sales - 1000);
+    }
+    else
+        com = 0.10 * sales;
+    printf("\nCommission = %f", com);
+    getch();
     return 0;
 }
 2.
 #include <stdio.h>
-#include <ctype.h>
+#include <conio.h>
+#include <stdlib.h>
 
-void caesarEncrypt(char text[], int shift) {
-    for (int i = 0; text[i] != '\0'; i++) {
-        if (isalpha(text[i])) {
-            char base = isupper(text[i]) ? 'A' : 'a';
-            text[i] = (text[i] - base + shift) % 26 + base;
+void main()
+{
+    int month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int d, m, y, nd, nm, ny, ndays;
+
+    printf("Enter the date, month, year (dd mm yyyy): ");
+    scanf("%d%d%d", &d, &m, &y);
+
+    if (y < 1812 || y > 2012)
+    {
+        printf("Invalid Input Year");
+        exit(0);
+    }
+
+    if (m < 1 || m > 12)
+    {
+        printf("Invalid Input Month");
+        exit(0);
+    }
+
+    ndays = month[m - 1];
+    if (m == 2)
+    {
+        if (y % 100 == 0)
+        {
+            if (y % 400 == 0)
+                ndays = 29;
+        }
+        else if (y % 4 == 0)
+        {
+            ndays = 29;
         }
     }
+
+    if (d <= 0 || d > ndays)
+    {
+        printf("Invalid Input Day");
+        exit(0);
+    }
+
+    nd = d + 1;
+    nm = m;
+    ny = y;
+
+    if (nd > ndays)
+    {
+        nd = 1;
+        nm++;
+    }
+
+    if (nm > 12)
+    {
+        nm = 1;
+        ny++;
+    }
+
+    printf("\n Given date is %d:%d:%d", d, m, y);
+    printf("\n Next day's date is %d:%d:%d", nd, nm, ny);
+    getch();
 }
 
-int main() {
-    char plaintext[100];
-    int shift;
-
-    printf("Enter the plaintext: ");
-    fgets(plaintext, sizeof(plaintext), stdin);
-
-    printf("Enter the shift value: ");
-    scanf("%d", &shift);
-
-    caesarEncrypt(plaintext, shift);
-
-    printf("Encrypted Ciphertext: %s\n", plaintext);
-
-    return 0;
-}
 3.
 #include <stdio.h>
 #include <conio.h>
-
-int IP[64] = {  
-    58, 50, 42, 34, 26, 18, 10, 2,  
-    60, 52, 44, 36, 28, 20, 12, 4,  
-    62, 54, 46, 38, 30, 22, 14, 6,  
-    64, 56, 48, 40, 32, 24, 16, 8,  
-    57, 49, 41, 33, 25, 17, 9, 1,  
-    59, 51, 43, 35, 27, 19, 11, 3,  
-    61, 53, 45, 37, 29, 21, 13, 5,  
-    63, 55, 47, 39, 31, 23, 15, 7  
-};
-
-unsigned long feistel_function(unsigned long right, unsigned long key) {
-    return right ^ key;
-}
-
-void initial_permutation(unsigned char input[8], unsigned char output[8]) {
-    int i;
-    for (i = 0; i < 8; i++) {
-        output[i] = 0;
+int main()
+{
+    int locks, stocks, barrels, t_sales, flag = 0;
+    float commission;
+    printf("Enter the total number of locks");
+    scanf("%d", &locks);
+    if ((locks <= 0) || (locks > 70))
+    {
+        flag = 1;
     }
-    for (i = 0; i < 64; i++) {
-        int bit_position = IP[i] - 1;
-        int byte_index = bit_position / 8;
-        int bit_index = bit_position % 8;
-        if (input[byte_index] & (1 << (7 - bit_index))) {
-            output[i / 8] |= (1 << (7 - (i % 8)));
-        }
+    printf("Enter the total number of stocks");
+    scanf("%d", &stocks);
+    if ((stocks <= 0) || (stocks > 80))
+    {
+        flag = 1;
     }
-}
-
-void des_encrypt(unsigned long plaintext, unsigned long key) {
-    unsigned char input[8], output[8];  
-    int i;
-
-    for (i = 0; i < 8; i++)
-        input[i] = (plaintext >> (56 - i * 8)) & 0xFF;
-
-    initial_permutation(input, output);
-
-    unsigned long permuted_plaintext = 0;
-    for (i = 0; i < 8; i++)
-        permuted_plaintext |= ((unsigned long)output[i] << (56 - i * 8));
-
-    unsigned long left = (permuted_plaintext >> 32) & 0xFFFFFFFF;
-    unsigned long right = permuted_plaintext & 0xFFFFFFFF;
-
-    printf("\nAfter Initial Permutation: L0 = %08lX, R0 = %08lX", left, right);
-
-    for (i = 0; i < 16; i++) {
-        unsigned long temp = right;
-        right = left ^ feistel_function(right, key);
-        left = temp;
-
-        printf("\nRound %2d: L = %08lX, R = %08lX", i + 1, left, right);
+    printf("Enter the total number of barrelss");
+    scanf("%d", &barrels);
+    if ((barrels <= 0) || (barrels > 90))
+    {
+        flag = 1;
     }
-
-    unsigned long ciphertext = (right << 32) | left;
-    printf("\nCiphertext: %08lX\n", ciphertext);
-}
-
-void main() {
-    unsigned long plaintext = 0x0123456789ABCDEF;
-    unsigned long key = 0x133457799BBCDFF1;
-
-    printf("Original Plaintext: %08lX\n", plaintext);
-
-    des_encrypt(plaintext, key);
-
+    if (flag == 1)
+    {
+        printf("invalid input");
+        getch();
+        exit(0);
+    }
+    t_sales = (locks * 45) + (stocks * 30) + (barrels * 25);
+    if (t_sales <= 1000)
+    {
+        commission = 0.10 * t_sales;
+    }
+    else if (t_sales < 1800)
+    {
+        commission = 0.10 * 1000;
+        commission = commission + (0.15 * (t_sales - 1000));
+    }
+    else
+    {
+        commission = 0.10 * 1000;
+        commission = commission + (0.15 * 800);
+        commission = commission + (0.20 * (t_sales - 1800));
+    }
+    printf("The total sales is %d \n The commission is %f", t_sales,
+           commission);
     getch();
+    return;
 }
 4.
 #include <stdio.h>
+#include <conio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <time.h>
 
-int gcd(int a, int b) {
-    while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
+int main()
+{
+    int month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int d, m, y, nd, nm, ny, ndays;
+
+    printf("enter the date,month,year");
+    scanf("%d%d%d", &d, &m, &y);
+
+    ndays = month[m - 1];
+
+    if (y <= 1812 || y > 2012)
+    {
+        printf("Invalid Input Year");
+        exit(0);
     }
-    return a;
-}
 
-long long mod_exp(long long base, long long exp, long long mod) {
-    long long result = 1;
-    while (exp > 0) {
-        if (exp % 2 == 1) {
-            result = (result * base) % mod;
+    if (d <= 0 || d > ndays)
+    {
+        printf("Invalid Input Day");
+        exit(0);
+    }
+
+    if (m < 1 || m > 12)
+    {
+        printf("Invalid Input Month");
+        exit(0);
+    }
+
+    if (m == 2)
+    {
+        if (y % 100 == 0)
+        {
+            if (y % 400 == 0)
+                ndays = 29;
         }
-        base = (base * base) % mod;
-        exp /= 2;
+        else if (y % 4 == 0)
+            ndays = 29;
     }
-    return result;
-}
 
-int mod_inverse(int e, int phi) {
-    int m0 = phi, t, q;
-    int x0 = 0, x1 = 1;
-    if (phi == 1) return 0;
-    while (e > 1) {
-        q = e / phi;
-        t = phi;
-        phi = e % phi, e = t;
-        t = x0;
-        x0 = x1 - q * x0;
-        x1 = t;
+    nd = d + 1;
+    nm = m;
+    ny = y;
+
+    if (nd > ndays)
+    {
+        nd = 1;
+        nm++;
     }
-    if (x1 < 0) x1 += m0;
-    return x1;
-}
 
-void generate_keys(int *n, int *e, int *d) {
-    int p = 61, q = 53;
-    *n = p * q;
-    int phi = (p - 1) * (q - 1);
-    
-    *e = 3;
-    while (gcd(*e, phi) != 1) {
-        (*e)++;
+    if (nm > 12)
+    {
+        nm = 1;
+        ny++;
     }
-    
-    *d = mod_inverse(*e, phi);
-}
 
-long long encrypt(int msg, int e, int n) {
-    return mod_exp(msg, e, n);
-}
+    printf("\n Given date is %d:%d:%d", d, m, y);
+    printf("\n Next day’s date is %d:%d:%d", nd, nm, ny);
 
-long long decrypt(long long cipher, int d, int n) {
-    return mod_exp(cipher, d, n);
-}
-
-int main() {
-    int n, e, d;
-    generate_keys(&n, &e, &d);
-    
-    printf("Generated RSA Keys:\n");
-    printf("Public Key: (n = %d, e = %d)\n", n, e);
-    printf("Private Key: (n = %d, d = %d)\n", n, d);
-    
-    int message = 42;
-    printf("Original Message: %d\n", message);
-    
-    long long encrypted = encrypt(message, e, n);
-    printf("Encrypted Message: %lld\n", encrypted);
-    
-    long long decrypted = decrypt(encrypted, d, n);
-    printf("Decrypted Message: %lld\n", decrypted);
-    
+    getch();
     return 0;
 }
 5.
 #include <stdio.h>
-#include <math.h>
+#include <conio.h>
 
-long long power(long long base, long long exponent, long long mod) {
-    long long result = 1;
-    while (exponent > 0) {
-        if (exponent % 2 == 1) {
-            result = (result * base) % mod;
-        }
-        base = (base * base) % mod;
-        exponent /= 2;
+int main()
+{
+    int a, b, c, c1, c2, c3;
+
+    do
+    {
+        printf("Enter sides of triangle:\n");
+        scanf("%d %d %d", &a, &b, &c);
+
+        c1 = ((a >= 1) && (a <= 10));
+        c2 = ((b >= 1) && (b <= 10));
+        c3 = ((c >= 1) && (c <= 10));
+
+        if (!c1)
+            printf("Value of a is out of range:");
+        if (!c2)
+            printf("Value of b is out of range:");
+        if (!c3)
+            printf("Value of c is out of range:");
+    } while (!c1 || !c2 || !c3);
+
+    if ((a + b) > c && (b + c) > a && (c + a) > b)
+    {
+        if (a == b && b == c)
+            printf("Triangle is Equilateral \n");
+        else if (a != b && b != c && c != a)
+            printf("Triangle is Scalar \n");
+        else
+            printf("Triangle is Isosceles \n");
     }
-    return result;
-}
+    else
+        printf("Triangle Can’t be formed \n");
 
-int main() {
-    long long prime, base, privateKeyA, privateKeyB, publicKeyA, publicKeyB, sharedKeyA, sharedKeyB;
-
-    printf("Enter a prime number: ");
-    scanf("%lld", &prime);
-    printf("Enter a primitive root of %lld: ", prime);
-    scanf("%lld", &base);
-
-    printf("Enter Private Key for User A: ");
-    scanf("%lld", &privateKeyA);
-    printf("Enter Private Key for User B: ");
-    scanf("%lld", &privateKeyB);
-
-    publicKeyA = power(base, privateKeyA, prime);
-    publicKeyB = power(base, privateKeyB, prime);
-
-    printf("Public Key for User A: %lld\n", publicKeyA);
-    printf("Public Key for User B: %lld\n", publicKeyB);
-
-    sharedKeyA = power(publicKeyB, privateKeyA, prime);
-    sharedKeyB = power(publicKeyA, privateKeyB, prime);
-
-    printf("Shared Secret Key for User A: %lld\n", sharedKeyA);
-    printf("Shared Secret Key for User B: %lld\n", sharedKeyB);
-
-    if (sharedKeyA == sharedKeyB) {
-        printf("Key Exchange Successful! Shared Key: %lld\n", sharedKeyA);
-    } else {
-        printf("Error in Key Exchange!\n");
-    }
-
+    getch();
     return 0;
 }
-
-
-
-
-
-
-
-
